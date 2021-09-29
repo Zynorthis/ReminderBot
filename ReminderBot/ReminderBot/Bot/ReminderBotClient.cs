@@ -51,12 +51,25 @@ namespace ReminderBot.Bot
             _token = newTokenValue;
         }
 
-        public async Task SendTestPrivateMessage(ulong userId)
+        private async Task<DiscordGuild> GetGuild()
         {
             var guild = await _discordClient.GetGuildAsync(_guildId);
+            return guild;
+        }
+
+        public async Task SendTestPrivateMessage(ulong userId)
+        {
+            var guild = GetGuild().Result;
             var guildMember = await guild.GetMemberAsync(userId);
 
             await guildMember.SendMessageAsync("Beep Boop, Hello! I am a bot that your Jacob build to send reminders automatically while he's sleeping. \n\nToday's Reminder: You're a wonderful person!");
+        }
+
+        public async Task SendPrivateMessage(ulong userId, string message)
+        {
+            var guild = GetGuild().Result;
+            var guildMember = await guild.GetMemberAsync(userId);
+            await guildMember.SendMessageAsync(message);
         }
     }
 }
